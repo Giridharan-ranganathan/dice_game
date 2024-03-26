@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Dice playing </title>
+</head>
+<style>
+    .container{
+        text-align: center;
+    }.headerOne{
+        color: green;
+    }.PlayGroungInside{
+        display: flex;
+         justify-content: space-evenly;
+   }.Player{
+        display: flex;
+        flex-flow: column;
+        justify-content: space-around;
+   }.reset{
+     background-color: #e47e7e;
+   }.Dice{
+    height: 140px;
+   }.footerBtn{
+    margin-top: 10px;
+   }.PlayGroung{
+    margin-top: 10px;
+   }
+</style>
+<body>
+    <div class="container">
+        <div class="headerOne">Let's Play Dice</div>
+        <div class="headerTwo"><h3>Player -<span id="toPlay">1</span> To Play</h3></div>
+        <div class="PlayGroung">
+            <div class="PlayGroungInside">
+                <div class="Player"> <h3>Player 1</h3>
+                    <span id="Player1Point"><h2>0</h2></span>
+                    <button class="btn btn-success Player1Btn" id="PlayerOneBtn" type="button" disabled>ROLL ON</button>
+                </div>
+                <div class="diceImg">
+                    <img src="/publice/dice1.png" alt="" class="Dice" id="currentImg">
+                </div>
+                <div class="Player"> <h3>Player 2</h3>
+                    <span id="Player2Point"><h2>0</h2></span>
+                    <button class=" btn btn-success Player2Btn" id="PlayertwoBtn" disabled>ROLL ON</button>
+                </div>
+            </div>
+        </div>
+        <div class="messagespan">
+            <span class="messageClass" id="messageId" hidden><h3></h3></span>
+        </div>
+        <div class="footerBtn">
+            <button class="reset btn btn-danger" id="reset" disabled>RESET</button>
+        </div>
+    </div>
+    <script>
+            const toPlay = document.getElementById("toPlay");
+            const player1SpanTag = document.getElementById("Player1Point");
+            const player2SpanTag = document.getElementById("Player2Point");
+            const player1Btn = document.getElementById("PlayerOneBtn");
+            const player2Btn = document.getElementById("PlayertwoBtn");
+            const resetBtn = document.getElementById("reset");
+            const diceImg = document.getElementById("currentImg");
+            const messageId = document.getElementById("messageId");
+
+            const data = {
+                currentPlayer : 1,
+                playerOnepoint : 0,
+                playertwopoint : 0,
+                
+            }
+
+        const startGame = () => {
+            SetCurrentPlayer(Math.ceil(Math.random() * 2));
+            data.playerOnepoint = 0;
+            data.playertwopoint = 0;
+            player1SpanTag.innerHTML = data.playerOnepoint;
+            player2SpanTag.innerHTML = data.playertwopoint;
+        } 
+
+        const SetCurrentPlayer = (playerNum) => {
+            data.currentPlayer = playerNum;
+            toPlay.innerHTML = data.currentPlayer;
+            if (data.currentPlayer == 1) {
+                player1Btn.removeAttribute("disabled");
+                player2Btn.setAttribute("disabled","disabled");
+            }else{
+                player1Btn.setAttribute("disabled","disabled");
+                player2Btn.removeAttribute("disabled");
+            }
+        }
+        
+        const diceRoll = () => {
+            const randomNum = Math.ceil(Math.random() * 6);
+            diceImg.src = `./publice/dice${randomNum}.png`;
+            if (data.currentPlayer == 1 ) {
+                data.playerOnepoint += randomNum;
+                player1SpanTag.innerHTML = data.playerOnepoint;
+            }else{
+                data.playertwopoint += randomNum;
+                player2SpanTag.innerHTML = data.playertwopoint;
+            }
+        }
+
+        player1Btn.addEventListener("click" ,() => {
+            diceRoll();
+            if (data.playerOnepoint >= 30 ) {
+                // messageId.removeAttribute("hidden");
+                // messageId.innerHTML = "Good Play Player One is Winner"; 
+                swal("Good job!", "Player One is Winner", "success");
+                setTimeout(function() {
+                    window.location.reload();
+                }, 4000);
+                // player1Btn.setAttribute("disabled","disabled");
+                // player2Btn.setAttribute("disabled","disabled");
+                // resetBtn.removeAttribute("disabled");
+            }else{
+                SetCurrentPlayer(2);
+            }
+
+        })
+
+        player2Btn.addEventListener("click" ,() => {
+            diceRoll();
+            if (data.playertwopoint >= 30 ) {
+                // messageId.removeAttribute("hidden");
+                // messageId.innerHTML = "Good Play Player Two is Winner";
+                swal("Good job!", "Player Two is Winner", "success");
+                setTimeout(function() {
+                    window.location.reload();
+                }, 4000);
+                // player1Btn.setAttribute("disabled","disabled");
+                // player2Btn.setAttribute("disabled","disabled");
+                // resetBtn.removeAttribute("disabled");
+            }else{
+                SetCurrentPlayer(1);
+            }
+
+        })
+
+        // resetBtn.addEventListener("click",() => {
+        //     window.location.reload();
+        // })
+
+        window.onload = () => {
+            startGame();
+        }
+    </script>
+</body>
+</html>
